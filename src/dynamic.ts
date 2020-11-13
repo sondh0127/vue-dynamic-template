@@ -19,11 +19,13 @@ const nonMsg = (msg: string) => warn(`no ${msg} found thus it will be ignored!`)
 const generateField = (
   comp: ComponentOptions<Vue>,
   component: ComponentOptions<Vue>,
-  type: 'filters' | 'methods',
+  type: 'filters' | 'methods' | 'mounted',
 ) => {
   const field = comp[type]
   if (isObject(field)) {
-    const wrappedField: Record<string, (this: any, ...args: any[]) => any> = {}
+    const wrappedField:
+      | Record<string, (this: any, ...args: any[]) => any>
+      | any = {}
     for (const [fieldName, method] of Object.entries(field || {})) {
       // prettier-ignore
       wrappedField[fieldName] = isFunction(method)
@@ -32,6 +34,12 @@ const generateField = (
         : Function[Array.isArray(method) ? 'apply' : 'call'](null, method)
     }
     component[type] = wrappedField
+  } else if (Array.isArray(field)) {
+    // @ts-ignore
+    component[type] = Function[Array.isArray(field) ? 'apply' : 'call'](
+      null,
+      field,
+    )
   } else if (field) {
     return invalidMsg(type)
   }
@@ -62,18 +70,28 @@ const buildComponent = (
 
   let count = 0
   comps.forEach((comp, index) => {
-    const { name = `Dynamic__${index}`, template, data, components } = comp
+    const {
+      name = `Dynamic__${index}`,
+      template,
+      data,
+      components,
+      mounted,
+    } = comp
 
     if (!template) {
       return nonMsg('template')
     }
 
     wrapTemp += `<${name}${notFirst ? '' : ' v-on="$parent.$listeners"'} />`
-    const component: ComponentOptions<Vue> = (wrapComp[name] = { template })
+    const component: ComponentOptions<Vue> = (wrapComp[name] = {
+      template,
+      mounted,
+    })
 
     if (
       !generateField(comp, component, 'filters') ||
-      !generateField(comp, component, 'methods')
+      !generateField(comp, component, 'methods') ||
+      !generateField(comp, component, 'mounted')
     ) {
       return
     }
@@ -96,13 +114,20 @@ const buildComponent = (
     return
   }
 
-  return notFirst
+  const retComps = notFirst
     ? wrapComp
     : {
         name: 'Dynamic__Root',
         template: count === 1 ? wrapTemp : `<div>${wrapTemp}</div>`,
         components: wrapComp,
+        mounted() {
+          console.log('mounted, mounted, mounted')
+        },
       }
+
+  console.log(`🇻🇳 [LOG]: retComps`, retComps)
+
+  return retComps
 }
 
 export interface Dynamic extends Vue {
