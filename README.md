@@ -1,4 +1,8 @@
-# vue-dynamic
+# Vue-dynamic fork from <https://github.com/JounQin/vue-dynamic>
+
+# New feature
+
+- Add mounted function
 
 [![GitHub Actions](https://github.com/JounQin/vue-dynamic/workflows/Node%20CI/badge.svg)](https://github.com/JounQin/vue-dynamic/actions?query=workflow%3A%22Node+CI%22)
 [![Codacy Grade](https://img.shields.io/codacy/grade/a8dfdfc423974b6e83f81215aee07e7e)](https://www.codacy.com/gh/JounQin/vue-dynamic)
@@ -19,10 +23,12 @@ Load stringified or normal Vue components dynamically!
 
 ## TOC <!-- omit in toc -->
 
-- [Notice](#notice)
-- [Usage](#usage)
-- [Changelog](#changelog)
-- [License](#license)
+- [Vue-dynamic fork from https://github.com/JounQin/vue-dynamic](#vue-dynamic-fork-from-httpsgithubcomjounqinvue-dynamic)
+- [New feature](#new-feature)
+  - [Notice](#notice)
+  - [Usage](#usage)
+  - [Changelog](#changelog)
+  - [License](#license)
 
 ## Notice
 
