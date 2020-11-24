@@ -76,6 +76,7 @@ const buildComponent = (
       data,
       components,
       mounted,
+      props,
     } = comp
 
     if (!template) {
@@ -98,6 +99,9 @@ const buildComponent = (
 
     if (data) {
       component.data = isFunction(data) ? data : () => ({ ...data })
+    }
+    if (props) {
+      component.props = props
     }
 
     if (components) {
