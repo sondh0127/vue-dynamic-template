@@ -19,7 +19,7 @@ const nonMsg = (msg: string) => warn(`no ${msg} found thus it will be ignored!`)
 const generateField = (
   comp: ComponentOptions<Vue>,
   component: ComponentOptions<Vue>,
-  type: 'filters' | 'methods' | 'mounted',
+  type: 'filters' | 'methods' | 'mounted' | 'created',
 ) => {
   const field = comp[type]
   if (isObject(field)) {
@@ -77,6 +77,7 @@ const buildComponent = (
       components,
       mounted,
       props,
+      created,
     } = comp
 
     if (!template) {
@@ -87,12 +88,14 @@ const buildComponent = (
     const component: ComponentOptions<Vue> = (wrapComp[name] = {
       template,
       mounted,
+      created,
     })
 
     if (
       !generateField(comp, component, 'filters') ||
       !generateField(comp, component, 'methods') ||
-      !generateField(comp, component, 'mounted')
+      !generateField(comp, component, 'mounted') ||
+      !generateField(comp, component, 'created')
     ) {
       return
     }
@@ -118,7 +121,7 @@ const buildComponent = (
     return
   }
 
-  const retComps = notFirst
+  return notFirst
     ? wrapComp
     : {
         name: 'Dynamic__Root',
@@ -127,11 +130,10 @@ const buildComponent = (
         mounted() {
           console.log('mounted, mounted, mounted')
         },
+        created() {
+          console.log('created, created, created')
+        },
       }
-
-  console.log(`🇻🇳 [LOG]: retComps`, retComps)
-
-  return retComps
 }
 
 export interface Dynamic extends Vue {
