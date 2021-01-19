@@ -19,7 +19,7 @@ const nonMsg = (msg: string) => warn(`no ${msg} found thus it will be ignored!`)
 const generateField = (
   comp: ComponentOptions<Vue>,
   component: ComponentOptions<Vue>,
-  type: 'filters' | 'methods' | 'mounted' | 'created',
+  type: 'filters' | 'methods' | 'mounted' | 'created' | 'computed',
 ) => {
   const field = comp[type]
   if (isObject(field)) {
@@ -78,6 +78,7 @@ const buildComponent = (
       mounted,
       props,
       created,
+      computed,
     } = comp
 
     if (!template) {
@@ -89,13 +90,15 @@ const buildComponent = (
       template,
       mounted,
       created,
+      computed,
     })
 
     if (
       !generateField(comp, component, 'filters') ||
       !generateField(comp, component, 'methods') ||
       !generateField(comp, component, 'mounted') ||
-      !generateField(comp, component, 'created')
+      !generateField(comp, component, 'created') ||
+      !generateField(comp, component, 'computed')
     ) {
       return
     }
